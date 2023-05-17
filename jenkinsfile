@@ -1,0 +1,35 @@
+pipeline {
+    agent {
+        node 
+        {
+            label 'build_server'
+        }
+    }
+    stages {
+        stage ("Pre-build") {
+            steps {
+                echo "Pre build steps ... "
+            }
+        }
+        stage ("SCM checkout") {
+            steps {
+                git branch: 'main', url: 'https://github.com/AchyuthChakravarthy/Sample-C-Project-Jenkins.git'
+            }
+        }
+        stage ("Build project") {
+            steps {
+                echo "$PWD"
+                dir ('/home/remote_user/build_job/workspace/test-pipeline') {
+                    sh "gcc add_digits.c"
+                }
+            }
+        }
+        stage ("Run project") {
+            steps {
+                sh """
+                    ./a.out 24 > /tmp/output.txt
+                """
+            }
+        }
+    }
+}
